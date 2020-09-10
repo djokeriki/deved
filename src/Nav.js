@@ -1,14 +1,26 @@
-import React, {useContext} from 'react';
-import {MovieContext} from './MovieContext';
-
-const Nav = () => {
-    const [movies, setMovies] = useContext(MovieContext);
-    return(
-        <div>
-            <h3>Zoran Kacarski</h3>
-            <p>List of Movies: {movies.length}</p>
-        </div>
-    );
+import React from 'react'
+import {Link} from 'react-router-dom';
+function Nav() {
+    const navStyle={
+        color: 'white',
+        listStyle: 'none',
+        textDecoration: 'none'
+    }
+    return (
+        <nav>
+            <h3>Logo</h3>
+            <ul className="nav-links">
+                <Link style={navStyle} to="/about">
+                <li>About</li>
+                </Link>
+                <Link style={navStyle} to="/shop">
+                <li>Shop</li>
+                </Link>
+                    
+                    
+            </ul>
+        </nav>
+    )
 }
 
-export default Nav;
+export default Nav

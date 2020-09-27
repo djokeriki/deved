@@ -1,31 +1,52 @@
-import React from 'react'
-import Nav from './Nav';
-import About from './About';
-import Shop from './Shop';
-import './App.css';
+import React, {useState, useEffect} from 'react';
+import Recipe from './Recipe';
+import './App.css'
+import {v1 as uuid} from 'uuid';
 
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
-import Item from './ItemDetail';
+const App = () => {
+  const APP_ID = "f1e0674a";
+  const APP_KEY = "b81f460cf3e1ffbdc7c8c628d4d8d6bd";
 
-function App() {
+  
+  const [counter, setCounter] = useState(0);
+  const [recipes, setRecipes] = useState([]);
+  const [search, setSearch] = useState('');
+  const [query, setQuery] = useState('chicken');
+
+
+
+
+  useEffect(() => {
+    getRecipes()
+  }, [query])
+
+  const getRecipes = async () => {
+    const response = await fetch(`https://api.edamam.com/search?q=${query}&app_id=${APP_ID}&app_key=${APP_KEY}`);
+    const data = await response.json();
+    setRecipes(data.hits);
+    console.log(data.hits);
+
+  }
+  const updateSearch = e => {
+    setSearch(e.target.value);
+  }
+  const getSearch = e => {
+    e.preventDefault();
+    setQuery(search);
+    setSearch('');
+  }
   return (
-    <BrowserRouter>
-  <div className="App">
-    <Nav />
-    <Switch>
-    <Route exact path="/" component={Home} />
-    <Route path="/about" component={About} />
-    <Route exact path="/shop" component={Shop} />
-    <Route path="/shop/:id" component={Item} />
-    </Switch>
-  </div>
-    </BrowserRouter>
+    <div className="App">
+      <form onSubmit={getSearch} className="search-form">
+        <input className="search-bar" type="text" value={search} onChange={updateSearch} />
+
+        <button className="search-button" type="submit">Search</button>
+      </form>
+      {recipes.map(recipe => (
+        <Recipe key={uuid()} title={recipe.recipe.label} calories={recipe.recipe.calories} image={recipe.recipe.image}  />
+      ))}
+    </div>
   )
 }
-const Home = () => (
-  <div>
-    <h1>Home Page</h1>
-  </div>
-)
 
 export default App
